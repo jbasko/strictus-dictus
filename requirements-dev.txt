@@ -5,3 +5,4 @@ isort
 pygments
 pytest
 pytest-random-order
+twine
