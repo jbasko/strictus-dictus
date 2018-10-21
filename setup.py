@@ -22,7 +22,7 @@ setup(
     maintainer="Jazeps Basko",
     maintainer_email="jazeps.basko@gmail.com",
     description="Strictus Dictus",
-    keywords="dictionary attrdict type hinting typing",
+    keywords="dictionary schema attribute attrdict type hinting typing annotations",
     long_description=read("README.rst"),
     modules=["strictus_dictus"],
     python_requires=">=3.6.0",
@@ -33,7 +33,7 @@ setup(
         ],
     },
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries",
         "Programming Language :: Python",
