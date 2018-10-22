@@ -183,3 +183,6 @@ def is_strictus_dictus(instance_or_type: Any) -> bool:
     if isinstance(instance_or_type, type):
         return issubclass(instance_or_type, StrictusDictus)
     return isinstance(instance_or_type, StrictusDictus)
+
+
+sdict = StrictusDictus

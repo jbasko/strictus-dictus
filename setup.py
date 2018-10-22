@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="strictus-dictus",
-    version="0.0.1",
+    version="0.0.2",
     url="https://github.com/jbasko/strictus-dictus",
     license="MIT",
     author="Jazeps Basko",
@@ -24,7 +24,7 @@ setup(
     description="Strictus Dictus",
     keywords="dictionary schema attribute attrdict type hinting typing annotations",
     long_description=read("README.rst"),
-    modules=["strictus_dictus"],
+    py_modules=["strictus_dictus"],
     python_requires=">=3.6.0",
     extras_require={
         ':python_version=="3.6"': [
