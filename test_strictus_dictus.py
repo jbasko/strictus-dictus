@@ -69,6 +69,12 @@ def test_non_empty_composite_sd():
     assert isinstance(line.to_dict()["start"], dict)
 
 
+def test_nones_arent_parsed():
+    line = Line({"start": None})
+    assert line.start is None
+    assert line.to_dict() == {"start": None}
+
+
 def test_undefined_container_initialised_as_empty():
     cloud = Cloud()
     assert cloud.points is EMPTY

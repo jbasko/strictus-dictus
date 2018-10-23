@@ -139,7 +139,9 @@ class StrictusDictus(dict):
         for item in cls._strictus_dictus_schema.values():  # type: StrictusDictus._SchemaItem
             if item.name in dct:
                 raw_value = dct[item.name]
-                if item.is_strictus_dictus:
+                if raw_value is None:
+                    parsed[item.name] = raw_value
+                elif item.is_strictus_dictus:
                     parsed[item.name] = item.type(raw_value)
                 elif item.is_dict:
                     parsed[item.name] = cls._parse_generic_dict(item, raw_value)
