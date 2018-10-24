@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Sequence, Union
 
 import pytest
 
-from strictus_dictus import EMPTY, StrictusDictus
+from strictus_dictus import EMPTY, StrictusDictus, get_schema, sdict
 
 
 class Point(StrictusDictus):
@@ -140,6 +140,16 @@ def test_unsupported_type_hints_leave_value_unprocessed(type_hint):
     assert weird.x is x
 
     assert weird.to_dict() == {"x": x}
+
+
+def test_sdict_is_alias():
+    assert sdict is StrictusDictus
+
+
+def test_get_schema_returns_schema():
+    assert get_schema(Point) is get_schema(Point())
+    assert get_schema(Point)["x"].name == "x"
+    assert get_schema(Point)["x"].type is int
 
 
 def test_readme_example():
