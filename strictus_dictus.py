@@ -188,3 +188,19 @@ def is_strictus_dictus(instance_or_type: Any) -> bool:
 
 
 sdict = StrictusDictus
+
+
+def get_schema(instance_or_type: Any):
+    """
+    Returns schema of the StrictusDictus instance or class.
+    """
+    assert is_strictus_dictus(instance_or_type)
+    return instance_or_type._strictus_dictus_schema
+
+
+__all__ = [
+    "EMPTY",
+    "StrictusDictus",
+    "sdict",
+    "get_schema",
+]

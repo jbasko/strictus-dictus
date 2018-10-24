@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="strictus-dictus",
-    version="0.0.3",
+    version="0.0.4",
     url="https://github.com/jbasko/strictus-dictus",
     license="MIT",
     author="Jazeps Basko",
