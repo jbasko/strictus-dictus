@@ -126,6 +126,20 @@ class StrictusDictus(dict):
                     export[item.name] = {k: v.to_dict() for k, v in value.items()}
 
             else:
+                if isinstance(item.type, type) and value is not None:
+                    if issubclass(item.type, str):
+                        # Convert to primitive string
+                        value = str(value)
+
+                    elif issubclass(item.type, int):
+                        value = int(value)
+
+                    elif issubclass(item.type, float):
+                        value = float(value)
+
+                    elif issubclass(item.type, bool):
+                        value = bool(value)
+
                 export[item.name] = value
 
         return export

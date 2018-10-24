@@ -57,6 +57,22 @@ def test_empty_composite_sd():
     assert line.to_dict() == {}
 
 
+def test_to_dict_serialises_strings():
+    class Name(str):
+        pass
+
+    class Person(StrictusDictus):
+        name: Name
+
+    p = Person(name=Name("Haha"))
+    assert isinstance(p.name, Name)
+
+    d = p.to_dict()
+    assert not isinstance(d["name"], Name)
+    assert isinstance(d["name"], str)
+    assert d["name"] == "Haha"
+
+
 def test_non_empty_composite_sd():
     line = Line({"start": {"x": 3, "y": 4}})
     assert isinstance(line.start, Point)
