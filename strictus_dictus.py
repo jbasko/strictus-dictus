@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, get_type_hints
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, get_type_hints  # noqa
 
 import dataclasses
 import typing_inspect
@@ -46,7 +46,7 @@ class StrictusDictus(dict):
     A StrictusDictus class cannot reference itself in its type hints (not even with forward references).
     """
 
-    _strictus_dictus_schema: ClassVar[Dict[str, "StrictusDictus._SchemaItem"]]
+    _strictus_dictus_schema: Dict  # type: ClassVar[Dict[str, "StrictusDictus._SchemaItem"]]
 
     def __init__(self, *args, **kwargs):
         if self.__class__ is StrictusDictus:
