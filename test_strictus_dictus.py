@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Sequence, Union
+from typing import ClassVar, Dict, List, Optional, Sequence, Union
 
 import pytest
 
@@ -152,11 +152,51 @@ def test_get_schema_returns_schema():
     assert get_schema(Point)["x"].type is int
 
 
+def test_defaults_vs_classvars():
+    class X(sdict):
+        a: int = 5
+        b: ClassVar[int] = 6
+
+    assert not hasattr(X, "a")
+    assert hasattr(X, "b")
+
+    x_schema = get_schema(X)
+
+    assert x_schema["a"].value == 5
+    assert "b" not in x_schema
+
+    assert X(a=2)["a"] == 2
+    assert X(a=2).a == 2
+
+    assert X()["a"] == 5
+    assert X().a == 5
+
+    assert X().b == 6
+    assert "b" not in X()
+
+    class Y(X):
+        pass
+
+    y_schema = get_schema(Y)
+
+    assert y_schema["a"].value == 5
+    assert "b" not in y_schema
+
+    assert Y(a=2)["a"] == 2
+    assert Y(a=2).a == 2
+
+    assert Y()["a"] == 5
+    assert Y().a == 5
+
+    assert Y().b == 6
+    assert "b" not in Y()
+
+
 def test_readme_example():
     from strictus_dictus import StrictusDictus
 
     class Header(StrictusDictus):
-        title: str
+        title: str = "Hello, world!"
         sent: str
 
     class Tag(StrictusDictus):
@@ -169,7 +209,6 @@ def test_readme_example():
 
     source = {
         "header": {
-            "title": "Hello, world!",
             "sent": "2018-10-20 18:09:42",
         },
         "body": "What is going on?",

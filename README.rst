@@ -19,7 +19,7 @@ and have your IDE auto-complete the attribute names.
     from strictus_dictus import StrictusDictus
 
     class Header(StrictusDictus):
-        title: str
+        title: str = "Hello, world!"  # default value
         sent: str
 
     class Tag(StrictusDictus):
@@ -32,7 +32,6 @@ and have your IDE auto-complete the attribute names.
 
     source = {
         "header": {
-            "title": "Hello, world!",
             "sent": "2018-10-20 18:09:42",
         },
         "body": "What is going on?",

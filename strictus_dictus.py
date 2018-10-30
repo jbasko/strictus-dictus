@@ -1,4 +1,4 @@
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, get_type_hints  # noqa
+from typing import Any, Callable, ClassVar, Dict, List, Optional, Tuple, Type, get_type_hints  # noqa
 
 import dataclasses
 import typing_inspect
@@ -13,6 +13,23 @@ class _Empty:
 
 
 EMPTY = _Empty()
+
+
+def _get_attr(instance, name):
+    if name in instance:
+        return instance[name]
+    elif name in instance._strictus_dictus_schema:
+        return instance._strictus_dictus_schema[name].value
+    raise AttributeError(name)
+
+
+def _create_getter(name) -> Callable:
+
+    def getter(instance):
+        return _get_attr(instance, name)
+
+    getter.__name__ = name
+    return getter
 
 
 class StrictusDictus(dict):
@@ -81,19 +98,37 @@ class StrictusDictus(dict):
             )
 
     def __init_subclass__(cls, **kwargs):
-        cls._strictus_dictus_schema = {
-            k: StrictusDictus._SchemaItem(name=k, type=v, value=getattr(cls, k, EMPTY))
-            for k, v in get_type_hints(cls).items()
-            if not str(v).startswith("typing.ClassVar")
-        }
+        strictus_dictus_schema = {}
 
-    def __getattr__(self, name):
-        if name in self:
-            return self[name]
-        elif name in self._strictus_dictus_schema:
-            return EMPTY
-        else:
-            raise AttributeError(name)
+        parent_schema = {}
+        if hasattr(cls, "_strictus_dictus_schema"):
+            parent_schema = getattr(cls, "_strictus_dictus_schema")
+
+        for k, v in get_type_hints(cls).items():
+            if k == "_strictus_dictus_schema":
+                continue
+            if str(v).startswith("typing.ClassVar"):
+                continue
+            if hasattr(cls, k):
+                default_value = getattr(cls, k)
+            elif k in parent_schema:
+                default_value = parent_schema[k].value
+            else:
+                default_value = EMPTY
+            strictus_dictus_schema[k] = StrictusDictus._SchemaItem(name=k, type=v, value=default_value)
+            if default_value is not EMPTY:
+                # We need to remove or replace the attribute from the class because its presence will
+                # stop __getattr__ from being called.
+                if k in cls.__dict__:
+                    # We can safely only remove the attribute from the class itself, but not from its parents.
+                    delattr(cls, k)
+                else:
+                    # Override the attribute
+                    setattr(cls, k, property(_create_getter(k)))
+
+        cls._strictus_dictus_schema = strictus_dictus_schema
+
+    __getattr__ = _get_attr
 
     def to_dict(self):
         """

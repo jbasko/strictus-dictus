@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="strictus-dictus",
-    version="0.0.6",
+    version="0.0.7",
     url="https://github.com/jbasko/strictus-dictus",
     license="MIT",
     author="Jazeps Basko",
@@ -33,7 +33,7 @@ setup(
         ],
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "Topic :: Software Development :: Libraries",
         "Programming Language :: Python",
