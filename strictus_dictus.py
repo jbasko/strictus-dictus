@@ -136,6 +136,12 @@ class StrictusDictus(dict):
         also converted to dictionaries.
         """
 
+        if hasattr(self, "Meta"):
+            meta = self.Meta.__dict__
+        else:
+            meta = {}
+        allow_additional_attributes = meta.get("additional_attributes", False)
+
         export = {}
         for item in self._strictus_dictus_schema.values():  # type: StrictusDictus._SchemaItem
             if item.name not in self:
@@ -177,12 +183,21 @@ class StrictusDictus(dict):
 
                 export[item.name] = value
 
+        if allow_additional_attributes:
+            export.update((k, self[k]) for k in self if k not in export)
+
         return export
 
     @classmethod
     def _parse(cls, dct: Dict) -> Optional[Dict]:
         if dct is None:
             return dct
+
+        if hasattr(cls, "Meta"):
+            meta = cls.Meta.__dict__
+        else:
+            meta = {}
+        allow_additional_attributes = meta.get("additional_attributes", False)
 
         parsed = {}
         for item in cls._strictus_dictus_schema.values():  # type: StrictusDictus._SchemaItem
@@ -207,9 +222,13 @@ class StrictusDictus(dict):
                     parsed[item.name] = raw_value
             elif item.value is not EMPTY:
                 parsed[item.name] = item.value
-        unknown = {repr(k) for k in dct if k not in parsed}
-        if unknown:
-            raise ValueError(f"Unsupported key(s) {', '.join(unknown)} passed to {cls.__name__}")
+
+        if allow_additional_attributes:
+            parsed.update((k, dct[k]) for k in dct if k not in parsed)
+        else:
+            unknown = {repr(k) for k in dct if k not in parsed}
+            if unknown:
+                raise ValueError(f"Unsupported key(s) {', '.join(unknown)} passed to {cls.__name__}")
         return parsed
 
     @classmethod
