@@ -192,6 +192,19 @@ def test_defaults_vs_classvars():
     assert "b" not in Y()
 
 
+def test_primitives_are_converted_to_expected_types():
+    class X(sdict):
+        a: int
+        b: float
+        c: bool
+
+    assert X(a="2").a == 2
+    assert X(b="0.23").b == 0.23
+
+    # Booleans are not converted yet
+    assert X(c="false").c == "false"
+
+
 def test_readme_example():
     from strictus_dictus import StrictusDictus
 

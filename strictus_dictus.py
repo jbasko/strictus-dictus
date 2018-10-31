@@ -196,6 +196,13 @@ class StrictusDictus(dict):
                     parsed[item.name] = cls._parse_generic_dict(item, raw_value)
                 elif item.is_list:
                     parsed[item.name] = cls._parse_generic_list(item, raw_value)
+                elif item.type in (int, float):
+                    if raw_value == "":
+                        parsed[item.name] = None
+                    else:
+                        parsed[item.name] = item.type(raw_value)
+                elif item.type is str:
+                    parsed[item.name] = item.type(raw_value)
                 else:
                     parsed[item.name] = raw_value
             elif item.value is not EMPTY:
