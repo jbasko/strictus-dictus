@@ -205,6 +205,33 @@ def test_primitives_are_converted_to_expected_types():
     assert X(c="false").c == "false"
 
 
+def test_primitives_parser_handles_empties():
+    class X(sdict):
+        a: int
+
+    x1 = X()
+    assert x1.a is EMPTY
+    assert "a" not in x1
+
+    x2 = X(a=x1.a)
+    assert x2.a is EMPTY
+    assert "a" not in x2
+
+
+def test_additional_attributes_setting():
+    class X(sdict):
+        a: int
+
+        class Meta:
+            additional_attributes = True
+
+    x = X(a=1, b=2)
+    assert x.a == 1
+    assert x.b == 2
+    assert x["b"] == 2
+    assert x.to_dict() == {"a": 1, "b": 2}
+
+
 def test_readme_example():
     from strictus_dictus import StrictusDictus
 
@@ -241,17 +268,3 @@ def test_readme_example():
 
     # Convert back to a standard dictionary
     message.to_dict()
-
-
-def test_additional_attributes_setting():
-    class X(sdict):
-        a: int
-
-        class Meta:
-            additional_attributes = True
-
-    x = X(a=1, b=2)
-    assert x.a == 1
-    assert x.b == 2
-    assert x["b"] == 2
-    assert x.to_dict() == {"a": 1, "b": 2}

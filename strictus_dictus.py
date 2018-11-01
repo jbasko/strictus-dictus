@@ -199,11 +199,14 @@ class StrictusDictus(dict):
             meta = {}
         allow_additional_attributes = meta.get("additional_attributes", False)
 
+        empties = set()
         parsed = {}
         for item in cls._strictus_dictus_schema.values():  # type: StrictusDictus._SchemaItem
             if item.name in dct:
                 raw_value = dct[item.name]
-                if raw_value is None:
+                if raw_value is EMPTY:
+                    empties.add(item.name)
+                elif raw_value is None:
                     parsed[item.name] = raw_value
                 elif item.is_strictus_dictus:
                     parsed[item.name] = item.type(raw_value)
@@ -224,9 +227,9 @@ class StrictusDictus(dict):
                 parsed[item.name] = item.value
 
         if allow_additional_attributes:
-            parsed.update((k, dct[k]) for k in dct if k not in parsed)
+            parsed.update((k, dct[k]) for k in dct if (k not in parsed and k not in empties))
         else:
-            unknown = {repr(k) for k in dct if k not in parsed}
+            unknown = {repr(k) for k in dct if (k not in parsed and k not in empties)}
             if unknown:
                 raise ValueError(f"Unsupported key(s) {', '.join(unknown)} passed to {cls.__name__}")
         return parsed
