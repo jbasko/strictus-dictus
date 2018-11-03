@@ -33,35 +33,6 @@ def _create_getter(name) -> Callable:
 
 
 class StrictusDictus(dict):
-    """
-    StrictusDictus is a base class for special dict sub-classes, instances of which only accepts keys that
-    are declared in the class's type hints.
-    The values of these keys are accessible as attributes with dot notation as well as with [] notation,
-    however, if the source dictionary is missing the key, StrictusDictus will not introduce it so access
-    via [] notation will raise a KeyError.
-    However, the attribute will be initialised to hold the special EMPTY value.
-
-    To create an instance use YourClass(standard_dict) and to export to a standard dictionary
-    use YourClass().to_dict().
-
-    Only a limited set of type hints are supported by StrictusDictus. Unsupported type hints will
-    be silently ignored and values will be returned unprocessed.
-
-    Given x, an attribute of StrictusDictus, supported type hints are (SD denotes any class
-    inheriting from StrictusDictus):
-
-        x: primitive_type (could be any type, but not from typing.*; value won't be processed)
-        x: List (unprocessed list)
-        x: Dict (unprocessed dictionary)
-        x: SD
-        x: List[SD]
-        x: Dict[str, SD]
-
-    You can annotate x with ``List[Any]`` and ``Dict[Any, Any]``, but the values won't be processed
-    by StrictusDictus.
-
-    A StrictusDictus class cannot reference itself in its type hints (not even with forward references).
-    """
 
     _strictus_dictus_schema: Dict  # type: ClassVar[Dict[str, "StrictusDictus._SchemaItem"]]
 

@@ -233,16 +233,16 @@ def test_additional_attributes_setting():
 
 
 def test_readme_example():
-    from strictus_dictus import StrictusDictus
+    from strictus_dictus import sdict
 
-    class Header(StrictusDictus):
-        title: str = "Hello, world!"
+    class Header(sdict):
+        title: str = "Hello, world!"  # default value
         sent: str
 
-    class Tag(StrictusDictus):
+    class Tag(sdict):
         value: str
 
-    class Message(StrictusDictus):
+    class Message(sdict):
         header: Header
         body: str
         tags: List[Tag]
@@ -265,6 +265,9 @@ def test_readme_example():
     # Access attributes
     assert message.header.title == "Hello, world!"
     assert message.tags[0].value == "unread"
+
+    # It still is a dictionary so this works too:
+    assert message["header"]["title"] == "Hello, world!"
 
     # Convert back to a standard dictionary
     message.to_dict()
