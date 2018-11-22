@@ -14,7 +14,7 @@ def read(fname):
 
 setup(
     name="strictus-dictus",
-    version="0.0.11",
+    version="0.0.12",
     url="https://github.com/jbasko/strictus-dictus",
     license="MIT",
     author="Jazeps Basko",
@@ -26,10 +26,12 @@ setup(
     long_description=read("README.rst"),
     py_modules=["strictus_dictus"],
     python_requires=">=3.6.0",
+    install_requires=[
+        "typing_inspect",
+    ],
     extras_require={
         ':python_version=="3.6"': [
             "dataclasses",
-            "typing_inspect",
         ],
     },
     classifiers=[
